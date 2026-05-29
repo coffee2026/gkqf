@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>考生祈福静心 · 金榜题名</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            font-family: system-ui, 'Segoe UI', '华文楷书', 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', Roboto, sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #831a 0%, #5a0f0f 100%);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        .cloud-svg {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.5;
+        }
+        .cloud-svg svg { width: 100%; height: 100%; }
+        .cloud-tl { top: 10px; left: 10px; width: 130px; height: 90px; }
+        .cloud-tr { top: 10px; right: 10px; width: 130px; height: 90px; }
+        .cloud-bl { bottom: 10px; left: 10px; width: 150px; height: 100px; }
+        .cloud-br { bottom: 10px; right: 10px; width: 150px; height: 100px; }
+        .container {
+            max-width: 620px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+        /* 木鱼区域 */
+        .muyu-wrap {
+            background: rgba(75, 20, 20, 0.85);
+            backdrop-filter: blur(14px);
+            border-radius: 72px;
+            padding: 28px 22px 36px;
+            box-shadow: 0 30px 45px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 215, 0, 0.4);
+            border: 1px solid #ffd966;
+            margin-bottom: 24px;
+        }
+        .title-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .main-title {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff5cc, #ffd966);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 6px #9b2e2e;
+            letter-spacing: 2px;
+        }
+        .main-title .muyu-word {
+            font-size: 1.7rem;
+            display: inline-block;
+        }
+        .sub-line {
+            font-size: 1rem;
+            color: #ffefb0;
+            background: #3a1010aa;
+            display: inline-block;
+            padding: 6px 24px;
+            border-radius: 60px;
+            margin-top: 10px;
+            font-weight: bold;
+            backdrop-filter: blur(4px);
+        }
+        .muyu-area {
+            text-align: center;
+            margin: 16px 0 12px;
+        }
+        .muyu {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            cursor: pointer;
+            transition: transform 0.08s linear;
+            filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.4));
+        }
+        .muyu:active { transform: scale(0.94); }
+        .muyu-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+            background: #fff8e7;
+            box-shadow: inset 0 0 0 4px #f3c26b, 0 12px 24px rgba(0,0,0,0.3);
+        }
+        .info {
+            color: #fff0b5;
+            font-weight: bold;
+            margin-top: 14px;
+            font-size: 1.1rem;
+            background: #2c0606b3;
+            display: inline-block;
+            padding: 6px 26px;
+            border-radius: 60px;
+            backdrop-filter: blur(4px);
+        }
+        /* 学科锦囊 */
+        .subject-panel {
+            background: rgba(55, 18, 18, 0.88);
+            border-radius: 48px;
+            padding: 20px 16px;
+            margin: 24px 0;
+            border: 1px solid #efbc6e;
+        }
+        .subject-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 18px;
+        }
+        .subject-btn {
+            background: #712020;
+            color: #fff0cf;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.1s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .subject-btn.active {
+            background: #f3c26b;
+            color: #2d0505;
+            box-shadow: 0 0 8px #ffd966;
+        }
+        .small-note {
+            text-align: center;
+            color: #ffe3a3;
+            font-size: 0.7rem;
+            margin: 6px 0 12px;
+        }
+        .advice-card {
+            background: #2c0c0cee;
+            padding: 16px 18px;
+            border-radius: 38px;
+            color: #fff2db;
+            font-size: 0.9rem;
+            line-height: 1.45;
+            border-left: 6px solid #f3c26b;
+            min-height: 120px;
+        }
+        /* 分享按钮 */
+        .share-btn {
+            width: 100%;
+            background: linear-gradient(95deg, #f5cd6b, #e7a831);
+            color: #2d0505;
+            font-weight: 800;
+            padding: 14px;
+            border-radius: 60px;
+            border: none;
+            margin: 18px 0 28px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.1s;
+            box-shadow: 0 6px 0 #8a521a;
+        }
+        .share-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #8a521a; }
+        /* ====================== AI 升学顾问（默认第一眼看到） ====================== */
+        .coze-section {
+            background: rgba(35, 9, 9, 0.92);
+            border-radius: 48px;
+            padding: 20px 14px;
+            margin-bottom: 28px;
+            border: 1px solid #efbc6e;
+            scroll-margin-top: 20px;
+        }
+        .coze-title {
+            color: #ffea9e;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 16px;
+            font-size: 1rem;
+            letter-spacing: 1px;
+        }
+        .coze-container {
+            width: 100%;
+            height: 480px;
+            border-radius: 32px;
+            overflow: hidden;
+            border: 2px solid #f3c26b;
+            margin: 0 auto;
+        }
+        .coze-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            transform: scale(0.85); /* 缩小到0.85，适配手机端显示完整界面 */
+            transform-origin: top center; /* 调整缩放原点为顶部居中，确保关闭按钮可见 */
+        }
+        /* 名校卡 */
+        .collection-section {
+            background: rgba(110, 35, 35, 0.94);
+            border-radius: 52px;
+            padding: 22px 18px;
+            margin: 24px 0 16px;
+            border: 1px solid #ffd966;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        .collection-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            color: #ffe2a4;
+        }
+        .collection-title { font-weight: bold; font-size: 1.1rem; }
+        .collection-progress {
+            font-size: 0.8rem;
+            background: #2a0808;
+            padding: 4px 14px;
+            border-radius: 40px;
+        }
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+            gap: 14px;
+            margin-top: 8px;
+        }
+        .university-card {
+            background: #922a2a;
+            color: #fff2da;
+            text-align: center;
+            padding: 12px 6px;
+            border-radius: 32px;
+            font-size: 0.75rem;
+            border: 1px solid #f3c26b;
+            cursor: pointer;
+            transition: 0.1s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .university-card:active { transform: scale(0.96); background: #c13b3b; }
+        .uni-emoji { font-size: 1.7rem; margin-bottom: 6px; }
+        .uni-name { font-size: 0.8rem; font-weight: bold; }
+        .unlock-badge {
+            font-size: 0.65rem;
+            background: #f3c26b;
+            color: #3d0b0b;
+            border-radius: 20px;
+            padding: 2px 8px;
+            display: inline-block;
+            margin-top: 6px;
+        }
+        /* 赞赏码 */
+        .payment-area {
+            text-align: center;
+            margin-top: 28px;
+            padding-top: 16px;
+            border-top: 1px dashed #ffd966;
+        }
+        .payment-link {
+            display: inline-block;
+            background: #d4af37;
+            color: #2d0505;
+            padding: 10px 28px;
+            border-radius: 60px;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 0.95rem;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+            transition: 0.1s;
+            cursor: pointer;
+        }
+        .payment-link:active { transform: scale(0.96); }
+        .qr-wrapper {
+            margin-top: 20px;
+            display: none;
+            justify-content: center;
+        }
+        .qr-card {
+            background: white;
+            padding: 12px;
+            border-radius: 32px;
+            display: inline-block;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .qr-card img {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            border-radius: 20px;
+        }
+        .qr-text {
+            font-size: 0.85rem;
+            color: #fff;
+            text-shadow: 0 0 3px #ff69b4,0 0 3px #ff69b4,0 0 3px #ff69b4;
+            margin-top: 12px;
+            line-height: 1.5;
+            text-align: center;
+        }
+        .copy-wechat {
+            display: inline-block;
+            background: #2c5e2e;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .copy-wechat:active { transform: scale(0.96); background: #1f4521; }
+        /* 浮动文字 */
+        .floating-text {
+            position: fixed;
+            pointer-events: none;
+            font-weight: bold;
+            font-size: 1.4rem;
+            color: #ffec80;
+            text-shadow: 0 0 4px #ff0000,0 0 4px #ff0000,0 0 4px #ff0000;
+            z-index: 999;
+            animation: floatUp 0.9s ease-out forwards;
+        }
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0px) scale(0.9);}
+            100% { opacity: 0; transform: translateY(-110px) scale(1.2);}
+        }
+        .unlock-toast {
+            position: fixed;
+            left: 50%;
+            top: 40%;
+            transform: translate(-50%,-50%);
+            background: linear-gradient(135deg, #ffdf70, #ffc107);
+            color: #8B0000;
+            font-weight: bold;
+            font-size: 1rem;
+            padding: 20px 28px;
+            border-radius: 16px;
+            z-index: 9999;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            border: 2px solid #fff;
+            opacity: 1;
+        }
+        .unlock-toast .blessing-text {
+            margin-top: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #8B0000;
+            display: block;
+        }
+        .unlock-toast .receive-btn {
+            background: #8B0000;
+            color: #ffdf70;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: bold;
+            margin-top: 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .audio-tip {
+            text-align: center;
+            color: #ffd966;
+            font-size: 0.8rem;
+            margin: 8px 0;
+            display: none;
+        }
+        @media (max-width: 580px) {
+            .coze-container { 
+                height: 600px;
+                margin: 0 auto;
+                overflow: visible;
+            }
+            .coze-iframe {
+                transform: scale(1.0);
+                transform-origin: top center;
+            }
+            .muyu { width: 160px; height: 160px; }
+            .main-title { font-size: 1.6rem; }
+            .map-grid { grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); }
+            .qr-card img { max-width: 160px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="cloud-svg cloud-tl"><svg viewBox="0 0 130 90" fill="none" stroke="white" stroke-width="1.5"><path d="M20,40 Q32,24 48,30 Q60,18 75,28 Q90,22 102,36 Q112,46 106,58 Q94,68 78,62 Q62,74 46,64 Q30,72 20,56 Q10,48 20,40Z" fill="rgba(255,255,255,0.13)" /></svg></div>
+    <div class="cloud-svg cloud-tr"><svg viewBox="0 0 130 90" fill="none" stroke="white" stroke-width="1.5"><path d="M20,40 Q32,24 48,30 Q60,18 75,28 Q90,22 102,36 Q112,46 106,58 Q94,68 78,62 Q62,74 46,64 Q30,72 20,56 Q10,48 20,40Z" fill="rgba(255,255,255,0.13)" /></svg></div>
+    <div class="cloud-svg cloud-bl"><svg viewBox="0 0 150 100" fill="none" stroke="white" stroke-width="1.5"><path d="M25,45 Q35,28 52,35 Q68,22 85,32 Q105,25 118,40 Q128,52 120,66 Q106,80 88,72 Q70,84 52,74 Q32,82 22,64 Q12,56 25,45Z" fill="rgba(255,255,255,0.12)" /></svg></div>
+    <div class="cloud-svg cloud-br"><svg viewBox="0 0 150 100" fill="none" stroke="white" stroke-width="1.5"><path d="M25,45 Q35,28 52,35 Q68,22 85,32 Q105,25 118,40 Q128,52 120,66 Q106,80 88,72 Q70,84 52,74 Q32,82 22,64 Q12,56 25,45Z" fill="rgba(255,255,255,0.12)" /></svg></div>
+    <div class="container">
+        <!-- 1. 木鱼 -->
+        <div class="muyu-wrap">
+            <div class="title-section">
+                <div class="main-title">考生祈福静心<span class="muyu-word">木鱼</span></div>
+                <div class="sub-line">🏆 金榜题名 · 逢考必过 🏆</div>
+            </div>
+            <div class="muyu-area">
+                <div class="muyu" id="muyuBtn">
+                    <img class="muyu-img" id="headImg" alt="祈福木鱼">
+                </div>
+                <div class="info">📿 圆满功德！ <span id="total">0</span></div>
+                <div class="audio-tip" id="audioTip">🎵 音效加载中，请稍候...</div>
+            </div>
+            <!-- 2. 学科锦囊 -->
+            <div class="subject-panel">
+                <div class="subject-buttons" id="subjectBtns">
+                    <button class="subject-btn active">语文</button>
+                    <button class="subject-btn">数学</button>
+                    <button class="subject-btn">英语</button>
+                    <button class="subject-btn">物理</button>
+                    <button class="subject-btn">化学</button>
+                    <button class="subject-btn">生物</button>
+                    <button class="subject-btn">政治</button>
+                    <button class="subject-btn">历史</button>
+                    <button class="subject-btn">地理</button>
+                </div>
+                <div class="small-note">📌 敲木鱼 · 积功德 点学科 · 拆锦囊</div>
+                <div class="advice-card" id="adviceCard">
+                    <div class="advice-title" id="adviceTitle">📖 语文 · 提分锦囊 1/5</div>
+                    <div class="adviceText" id="adviceText">愿文曲星护佑，笔下生花～</div>
+                </div>
+            </div>
+            <!-- 3. 分享按钮 -->
+            <button class="share-btn" id="shareBtn">📤 广种福田 · 分享祈福</button>
+            <!-- 4. AI升学顾问 -->
+            <div class="coze-section" id="aiAdvisor">
+                <div class="coze-title">🤖 AI升学顾问｜华侨生&国际｜低分名校｜留学移民</div>
+                <div class="coze-container">
+                    <iframe src="https://www.coze.cn/s/8gDURgT823U/" class="coze-iframe" allow="clipboard-read; clipboard-write"></iframe>
+                </div>
+            </div>
+            <!-- 5. 名校卡 -->
+            <div class="collection-section">
+                <div class="collection-header">
+                    <span class="collection-title">🌟 我的名校福缘珍藏卡</span>
+                    <span class="collection-progress" id="collectionProgress">已解锁 0 / 108</span>
+                </div>
+                <div class="map-grid" id="unlockedGrid"></div>
+                <div class="small-note" style="margin-top: 14px;">✨ 敲木鱼积功德，每达里程碑名校福卡自降临 ✨</div>
+                <!-- 6. 赞赏码 -->
+                <div class="payment-area">
+                    <div id="payBtn" class="payment-link">📿 随缘赞赏 · 金榜题名</div>
+                    <div id="qrContainer" class="qr-wrapper">
+                        <div class="qr-card">
+                            <img id="qrImage" src="wechatpay.jpg" alt="微信赞赏码" 
+                                 onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 200 200\'%3E%3Crect width=\'200\' height=\'200\' fill=\'%23eeeeee\'/%3E%3Ctext x=\'100\' y=\'100\' font-size=\'14\' text-anchor=\'middle\' fill=\'%23999\'%3E赞赏码%3C/text%3E%3C/svg%3E';">
+                            <div class="qr-text">
+                                💖 关注赞赏，心想事成<br>
+                                ✅ 领QS108名校表+升学留学规划<br>
+                                ✅ 华侨生绿卡+申请优才高才续签
+                                <span id="copyWechatBtn" class="copy-wechat">📋 复制微信</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // 页面加载自动滚动到AI
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                document.getElementById('aiAdvisor').scrollInto({ behavior: 'smooth', block: 'start' });
+            }, 300);
+        });
+
+        // 木鱼
+        const AVATAR_LIST = [
+            "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Ccircle cx='100' cy='100' r='94' fill='%23f9e0a0' stroke='%23d4af37' stroke-width='4'/%3E%3Ccircle cx='100' cy='100' r='88' fill='%23ffb347'/%3E%3Cellipse cx='100' cy='100' rx='50' ry='38' fill='%23b23c1c'/%3E%3Ccircle cx='78' cy='92' r='6' fill='white'/%3E%3Ccircle cx='80' cy='94' r='3' fill='black'/%3E%3Ccircle cx='122' cy='92' r='6' fill='white'/%3E%3Ccircle cx='120' cy='94' r='3' fill='black'/%3E%3Cpath d='M85 115 Q100 125 115 115' stroke='%238b0000' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Cpath d='M68 62 L132 62 L126 50 L74 50 Z' fill='%23e6b422' stroke='%23b8860b' stroke-width='3'/%3E%3Crect x='86' y='42' width='28' height='10' rx='3' fill='%23ffd700' stroke='%23b8860b' stroke-width='2'/%3E%3Ctext x='100' y='144' font-size='20' font-family='KaiTi, serif' fill='%23fff5cc' text-anchor='middle' font-weight='bold'%3E金榜题名%3C/text%3E%3C/svg%3E"
+        ];
+        let currentAvatarIndex = 0;
+        const headImg = document.getElementById("headImg");
+        headImg.src = AVATAR_LIST[currentAvatarIndex];
+        function switchAvatar() {
+            currentAvatarIndex = (currentAvatarIndex + 1) % AVATAR_LIST.length;
+            headImg.src = AVATAR_LIST[currentAvatarIndex];
+        }
+
+        let knockAudio = null;
+        let totalKnock = 0;
+        const totalSpan = document.getElementById("total");
+        const audioTip = document.getElementById("audioTip");
+
+        function initAudio() {
+            const url = "https://freetestdata.com/wp-content/uploads/2021/09/Free_Test_Data_100KB_MP3.mp3";
+            knockAudio = new Audio(url);
+            knockAudio.volume = 1.0;
+            knockAudio.preload = "auto";
+            knockAudio.addEventListener('canplaythrough', () => { audioTip.style.display = "none"; });
+            knockAudio.addEventListener('error', () => { audioTip.textContent = "❌ 音效加载失败"; audioTip.style.color = "#ff6666"; });
+            document.addEventListener('click', () => { if (knockAudio) knockAudio.play().then(()=>knockAudio.pause()); }, { once: true });
+        }
+
+        function playSound() {
+            if (!knockAudio) return;
+            const s = knockAudio.cloneNode();
+            s.volume = 1.0;
+            s.play();
+        }
+
+        document.getElementById("muyuBtn").addEventListener('click', (e) => {
+            totalKnock++;
+            totalSpan.textContent = totalKnock;
+            playSound();
+            switchAvatar();
+            const rect = e.target.getBoundingClientRect();
+            showFloat(rect.left+rect.width/2, rect.top+rect.height/2);
+            if(totalKnock === 1 || totalKnock % 5 === 0) unlockRandom();
+        });
+
+        const words = ["🎓 金榜题名","📚 逢考必过","✨ 旗开得胜","🐟 鱼跃龙门","🏆 状元及第","🌟 前程似锦"];
+        function showFloat(x,y) {
+            const el = document.createElement("div");
+            el.className = "floating-text";
+            el.innerText = words[Math.floor(Math.random()*words.length)];
+            el.style.left = x-35+"px";
+            el.style.top = y-45+"px";
+            document.body.appendChild(el);
+            setTimeout(()=>el.remove(),900);
+        }
+
+        // 学科锦囊（5条/科）
+        const subjectAdvice = {
+            "语文": ["愿文曲星护佑，笔下生花～\n1.作文首尾用金句",
+                     "愿文曲星护佑，笔下生花～\n2.古诗文默写零失误",
+                     "愿文曲星护佑，笔下生花～\n3.阅读题先看问题",
+                     "愿文曲星护佑，笔下生花～\n4.文言文字字落实",
+                     "愿文曲星护佑，笔下生花～\n5.真题熟悉套路"],
+            "数学": ["愿数理星君加持～\n1.选填用特殊值法",
+                     "愿数理星君加持～\n2.大题步骤写完整",
+                     "愿数理星君加持～\n3.检查计算和单位",
+                     "愿数理星君加持～\n4.函数画图辅助",
+                     "愿数理星君加持～\n5.压轴分步拿分"],
+            "英语": ["愿语言之神相助～\n1.作文换高级词",
+                     "愿语言之神相助～\n2.听力圈关键词",
+                     "愿语言之神相助～\n3.阅读找同义替换",
+                     "愿语言之神相助～\n4.完形先通读",
+                     "愿语言之神相助～\n5.语法填固定搭配"],
+            "物理": ["愿力学天尊庇佑～\n1.审题画受力图",
+                     "愿力学天尊庇佑～\n2.公式写全单位统一",
+                     "愿力学天尊庇佑～\n3.实验看误差",
+                     "愿力学天尊庇佑～\n4.多选宁缺毋滥",
+                     "愿力学天尊庇佑～\n5.计算题先写原理"],
+            "化学": ["愿炼金术士助力～\n1.方程式配平",
+                     "愿炼金术士助力～\n2.推断找题眼",
+                     "愿炼金术士助力～\n3.守恒法算题",
+                     "愿炼金术士助力～\n4.实验除杂检验",
+                     "愿炼金术士助力～\n5.概念辨陷阱"],
+            "生物": ["愿生命之神护佑～\n1.核心概念熟记",
+                     "愿生命之神护佑～\n2.实验单一变量",
+                     "愿生命之神护佑～\n3.遗传画图解",
+                     "愿生命之神护佑～\n4.注意限定词",
+                     "愿生命之神护佑～\n5.简答用教材话"],
+            "政治": ["愿文曲星护体～\n1.先审设问",
+                     "愿文曲星护体～\n2.知识点配材料",
+                     "愿文曲星护体～\n3.关键词分点",
+                     "愿文曲星护体～\n4.辨析先表态",
+                     "愿文曲星护体～\n5.主观多角度"],
+            "历史": ["愿史神庇佑～\n1.时间轴梳理",
+                     "愿史神庇佑～\n2.材料看背景",
+                     "愿史神庇佑～\n3.史论结合",
+                     "愿史神庇佑～\n4.抓时间地点",
+                     "愿史神庇佑～\n5.分阶段作答"],
+            "地理": ["愿地母娘娘加持～\n1.地图定位",
+                     "愿地母娘娘加持～\n2.自然重原理",
+                     "愿地母娘娘加持～\n3.综合搭框架",
+                     "愿地母娘娘加持～\n4.排除法选",
+                     "愿地母娘娘加持～\n5.规范术语"]
+        };
+        let currentAdviceIndex = {};
+        Object.keys(subjectAdvice).forEach(s => currentAdviceIndex[s]=0);
+        const subjectBtns = document.querySelectorAll(".subject-btn");
+        const adviceTitle = document.getElementById("adviceTitle");
+        const adviceText = document.getElementById("adviceText");
+        subjectBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                subjectBtns.forEach(b=>b.classList.remove('active'));
+                btn.classList.add('active');
+                const s = btn.textContent;
+                currentAdviceIndex[s] = (currentAdviceIndex[s]+1)%subjectAdvice[s].length;
+                adviceTitle.textContent = `${s} · 提分锦囊 ${currentAdviceIndex[s]+1}/5`;
+                adviceText.textContent = subjectAdvice[s][currentAdviceIndex[s]];
+            });
+        });
+
+        // 108名校
+        const allUniversities = [
+            { name:"麻省理工学院", emoji:"⚙️🧠", loc:"美国", slogan:"创新世界", info:"QS1｜工程/计算机", famous:"诺奖得主、马斯克" },
+            { name:"剑桥大学", emoji:"📘⚓", loc:"英国", slogan:"启蒙之源", info:"QS2｜自然科学", famous:"牛顿、达尔文" },
+            { name:"斯坦福大学", emoji:"🌲🌟", loc:"美国", slogan:"自由之风", info:"QS3｜计算机/商学", famous:"拉里·佩奇、谢尔盖·布林" },
+            { name:"牛津大学", emoji:"📖⚜️", loc:"英国", slogan:"卓越智慧", info:"QS4｜人文/法学", famous:"霍金、托尔金" },
+            { name:"哈佛大学", emoji:"🔴🦉", loc:"美国", slogan:"真理至上", info:"QS5｜法学/商学", famous:"扎克伯格、罗斯福" },
+            { name:"加州理工学院", emoji:"🔭🚀", loc:"美国", slogan:"探索宇宙", info:"QS6｜物理/天文", famous:"钱学森" },
+            { name:"帝国理工学院", emoji:"👑🔬", loc:"英国", slogan:"科技之巅", info:"QS7｜工程/医学", famous:"抗生素发明者" },
+            { name:"苏黎世联邦理工学院", emoji:"🇨🇭⚛️", loc:"瑞士", slogan:"欧陆第一", info:"QS8｜物理/工程", famous:"爱因斯坦" },
+            { name:"伦敦大学学院", emoji:"🏛️🌍", loc:"英国", slogan:"全球视野", info:"QS9｜人文/医学", famous:"泰戈尔" },
+            { name:"芝加哥大学", emoji:"🏙️📚", loc:"美国", slogan:"思辨之光", info:"QS10｜经济学/物理学", famous:"杨振宁" },
+            { name:"南洋理工大学", emoji:"🇸🇬🔬", loc:"新加坡", slogan:"科技绿洲", info:"QS11｜工程/材料", famous:"李光耀" },
+            { name:"新加坡国立大学", emoji:"🇸🇬🦁", loc:"新加坡", slogan:"亚洲第一", info:"QS12｜工程/商科", famous:"李光耀" },
+            { name:"宾夕法尼亚大学", emoji:"🏛️📜", loc:"美国", slogan:"沃顿之光", info:"QS13｜商学/法学", famous:"巴菲特、特朗普" },
+            { name:"耶鲁大学", emoji:"⚖️📚", loc:"美国", slogan:"真理与光明", info:"QS14｜法学/人文", famous:"克林顿、布什" },
+            { name:"康奈尔大学", emoji:"🌽🏫", loc:"美国", slogan:"精益求精", info:"QS15｜工程/农学", famous:"胡适、冰心" },
+            { name:"哥伦比亚大学", emoji:"🗽📚", loc:"美国", slogan:"智慧之城", info:"QS16｜法学/商学", famous:"奥巴马、罗斯福" },
+            { name:"爱丁堡大学", emoji:"🏰📚", loc:"英国", slogan:"北方雅典", info:"QS17｜人文/医学", famous:"达尔文、柯南·道尔" },
+            { name:"普林斯顿大学", emoji:"🎓🔬", loc:"美国", slogan:"因真理得自由", info:"QS18｜数学/物理", famous:"爱因斯坦、纳什" },
+            { name:"约翰霍普金斯大学", emoji:"🏥🔬", loc:"美国", slogan:"医学圣殿", info:"QS19｜医学/公共卫生", famous:"基因编辑先驱" },
+            { name:"密歇根大学", emoji:"🌲📚", loc:"美国", slogan:"狼獾精神", info:"QS20｜工程/商学", famous:"杰拉尔德·福特" },
+            { name:"东京大学", emoji:"🇯🇵🌸", loc:"日本", slogan:"亚洲之光", info:"QS21｜工程/医学", famous:"诺贝尔得主11位" },
+            { name:"多伦多大学", emoji:"🇨🇦🏙️", loc:"加拿大", slogan:"多元学术", info:"QS22｜医学/工程", famous:"白求恩" },
+            { name:"麦吉尔大学", emoji:"🇨🇦🏫", loc:"加拿大", slogan:"北方哈佛", info:"QS23｜医学/法学", famous:"白求恩" },
+            { name:"京都大学", emoji:"🇯🇵🏯", loc:"日本", slogan:"自由学风", info:"QS24｜物理/化学", famous:"汤川秀树、福井谦一" },
+            { name:"曼彻斯特大学", emoji:"🏴󠁧󠁢󠁥󠁮󠁿⚽", loc:"英国", slogan:"红砖名校", info:"QS25｜工程/物理", famous:"卢瑟福、霍金" },
+            { name:"香港大学", emoji:"🇭🇰🏙️", loc:"中国香港", slogan:"亚洲常春藤", info:"QS26｜医学/法学", famous:"孙中山、张爱玲" },
+            { name:"香港中文大学", emoji:"🇭🇰📚", loc:"中国香港", slogan:"结合传统与现代", info:"QS27｜商学/医学", famous:"杨振宁" },
+            { name:"香港科技大学", emoji:"🇭🇰⚡", loc:"中国香港", slogan:"科技引领", info:"QS28｜工程/商科", famous:"诺贝尔奖得主" },
+            { name:"首尔大学", emoji:"🇰🇷🏙️", loc:"韩国", slogan:"韩国第一", info:"QS29｜工程/医学", famous:"韩国总统11位" },
+            { name:"高丽大学", emoji:"🇰🇷📚", loc:"韩国", slogan:"民族之光", info:"QS30｜法学/商学", famous:"韩国总统、三星高管" },
+            { name:"成均馆大学", emoji:"🇰🇷🏯", loc:"韩国", slogan:"儒学传承", info:"QS31｜商学/工程", famous:"三星集团赞助" },
+            { name:"韩国科学技术院", emoji:"🇰🇷🔬", loc:"韩国", slogan:"科技精英", info:"QS32｜工程/计算机", famous:"韩国科技领袖" },
+            { name:"早稻田大学", emoji:"🇯🇵🏙️", loc:"日本", slogan:"独立精神", info:"QS33｜法学/商学", famous:"村上春树、福田康夫" },
+            { name:"庆应义塾大学", emoji:"🇯🇵🏫", loc:"日本", slogan:"福泽谕吉精神", info:"QS34｜商学/法学", famous:"日本首相多位" },
+            { name:"大阪大学", emoji:"🇯🇵🔬", loc:"日本", slogan:"关西第一", info:"QS35｜工程/医学", famous:"诺贝尔得主" },
+            { name:"东北大学", emoji:"🇯🇵🏔️", loc:"日本", slogan:"仙台学府", info:"QS36｜材料/工程", famous:"鲁迅、诺贝尔奖得主" },
+            { name:"名古屋大学", emoji:"🇯🇵🏙️", loc:"日本", slogan:"中部之光", info:"QS37｜物理/化学", famous:"诺贝尔得主多位" },
+            { name:"北海道大学", emoji:"🇯🇵❄️", loc:"日本", slogan:"北国学府", info:"QS38｜农学/医学", famous:"日本农学先驱" },
+            { name:"九州大学", emoji:"🇯🇵🌋", loc:"日本", slogan:"九州第一", info:"QS39｜工程/医学", famous:"日本科技领袖" },
+            { name:"筑波大学", emoji:"🇯🇵🏛️", loc:"日本", slogan:"科学城学府", info:"QS40｜教育/工程", famous:"日本教育改革先锋" },
+            { name:"北京大学", emoji:"🇨🇳🏛️", loc:"中国", slogan:"思想自由兼容并包", info:"QS41｜人文/理学", famous:"屠呦呦、李彦宏" },
+            { name:"清华大学", emoji:"🇨🇳🏫", loc:"中国", slogan:"自强不息厚德载物", info:"QS42｜工程/计算机", famous:"杨振宁、邓稼先" },
+            { name:"复旦大学", emoji:"🇨🇳📚", loc:"中国", slogan:"博学而笃志", info:"QS43｜医学/商学", famous:"李政道、陈望道" },
+            { name:"上海交通大学", emoji:"🇨🇳🚢", loc:"中国", slogan:"饮水思源爱国荣校", info:"QS44｜工程/医学", famous:"钱学森、江泽民" },
+            { name:"浙江大学", emoji:"🇨🇳🌊", loc:"中国", slogan:"求是创新", info:"QS45｜工程/农学", famous:"竺可桢、李政道" },
+            { name:"南京大学", emoji:"🇨🇳🏛️", loc:"中国", slogan:"诚朴雄伟励学敦行", info:"QS46｜理学/人文", famous:"杨振宁、程开甲" },
+            { name:"中国科学技术大学", emoji:"🇨🇳🔬", loc:"中国", slogan:"红专并进理实交融", info:"QS47｜物理/计算机", famous:"钱学森、朱清时" },
+            { name:"武汉大学", emoji:"🇨🇳🌸", loc:"中国", slogan:"自强弘毅求是拓新", info:"QS48｜法学/人文", famous:"雷军、窦文涛" },
+            { name:"中山大学", emoji:"🇨🇳🌴", loc:"中国", slogan:"博学审问慎思明辨笃行", info:"QS49｜医学/商学", famous:"钟南山、卢瑞华" },
+            { name:"吉林大学", emoji:"🇨🇳❄️", loc:"中国", slogan:"求实创新励志图强", info:"QS50｜法学/化学", famous:"张锦秋、徐如人" },
+            { name:"哈尔滨工业大学", emoji:"🇨🇳🛰️", loc:"中国", slogan:"规格严格功夫到家", info:"QS51｜工程/航天", famous:"航天工程先驱" },
+            { name:"西安交通大学", emoji:"🇨🇳🏙️", loc:"中国", slogan:"精勤求学敦笃励志", info:"QS52｜工程/管理", famous:"钱学森、蒋新松" },
+            { name:"华中科技大学", emoji:"🇨🇳🏥", loc:"中国", slogan:"明德厚学求是创新", info:"QS53｜工程/医学", famous:"裘法祖、李培根" },
+            { name:"天津大学", emoji:"🇨🇳🌊", loc:"中国", slogan:"实事求是", info:"QS54｜工程/建筑", famous:"茅以升、张太雷" },
+            { name:"南开大学", emoji:"🇨🇳📚", loc:"中国", slogan:"允公允能日新月异", info:"QS55｜经济/历史", famous:"周恩来、陈省身" },
+            { name:"厦门大学", emoji:"🇨🇳🌴", loc:"中国", slogan:"自强不息止于至善", info:"QS56｜经济/海洋科学", famous:"陈景润、卢嘉锡" },
+            { name:"山东大学", emoji:"🇨🇳⛰️", loc:"中国", slogan:"学无止境气有浩然", info:"QS57｜医学/历史", famous:"季羡林、童第周" },
+            { name:"东南大学", emoji:"🇨🇳🏛️", loc:"中国", slogan:"止于至善", info:"QS58｜建筑/工程", famous:"建筑四杰、茅以升" },
+            { name:"北京航空航天大学", emoji:"🇨🇳✈️", loc:"中国", slogan:"德才兼备知行合一", info:"QS59｜航空航天/计算机", famous:"航天工程先驱" },
+            { name:"北京理工大学", emoji:"🇨🇳🔬", loc:"中国", slogan:"德以明理学以精工", info:"QS60｜工程/材料", famous:"国防科技先驱" },
+            { name:"同济大学", emoji:"🇨🇳🏗️", loc:"中国", slogan:"严谨求实团结创新", info:"QS61｜建筑/土木", famous:"贝聿铭、李国豪" },
+            { name:"华南理工大学", emoji:"🇨🇳🌴", loc:"中国", slogan:"博学慎思明辨笃行", info:"QS62｜工程/建筑", famous:"建筑大师、企业家" },
+            { name:"大连理工大学", emoji:"🇨🇳🌊", loc:"中国", slogan:"海纳百川自强不息", info:"QS63｜工程/力学", famous:"力学工程先驱" },
+            { name:"西北工业大学", emoji:"🇨🇳✈️", loc:"中国", slogan:"公诚勇毅", info:"QS64｜航空航天/材料", famous:"国防科技人才" },
+            { name:"重庆大学", emoji:"🇨🇳🌆", loc:"中国", slogan:"耐劳苦尚俭勤学业爱国家", info:"QS65｜工程/建筑", famous:"建筑工程大师" },
+            { name:"四川大学", emoji:"🇨🇳🐼", loc:"中国", slogan:"海纳百川有容乃大", info:"QS66｜医学/历史", famous:"巴金、张澜" },
+            { name:"湖南大学", emoji:"🇨🇳🏛️", loc:"中国", slogan:"实事求是敢为人先", info:"QS67｜土木/管理", famous:"建筑大师、企业家" },
+            { name:"中南大学", emoji:"🇨🇳🔬", loc:"中国", slogan:"知行合一经世致用", info:"QS68｜医学/材料", famous:"黄伯云、钟掘" },
+            { name:"电子科技大学", emoji:"🇨🇳📡", loc:"中国", slogan:"求实求真大气大为", info:"QS69｜电子/计算机", famous:"通信工程先驱" },
+            { name:"中国农业大学", emoji:"🇨🇳🌾", loc:"中国", slogan:"解民生之多艰育天下之英才", info:"QS70｜农学/生物", famous:"农业科技先驱" },
+            { name:"北京师范大学", emoji:"🇨🇳📚", loc:"中国", slogan:"学为人师行为世范", info:"QS71｜教育/心理", famous:"启功、莫言" },
+            { name:"中国人民大学", emoji:"🇨🇳🏛️", loc:"中国", slogan:"实事求是", info:"QS72｜经济/法学", famous:"吴玉章、成思危" },
+            { name:"澳门大学", emoji:"🇲🇴🏙️", loc:"中国澳门", slogan:"仁、义、礼、知、信", info:"QS73｜葡语/商科", famous:"澳门特区政府支持" },
+            { name:"澳门科技大学", emoji:"🇲🇴🔬", loc:"中国澳门", slogan:"意诚格物", info:"QS74｜医学/商学", famous:"中医药研究先驱" },
+            { name:"新加坡管理大学", emoji:"🇸🇬📚", loc:"新加坡", slogan:"亚洲商学院", info:"QS75｜商学/经济", famous:"新加坡政商精英" },
+            { name:"新加坡科技设计大学", emoji:"🇸🇬🔬", loc:"新加坡", slogan:"创新科技", info:"QS76｜设计/工程", famous:"新加坡科技合作" },
+            { name:"香港城市大学", emoji:"🇭🇰🏙️", loc:"中国香港", slogan:"专业进取敦品励学", info:"QS77｜工程/商学", famous:"香港城市建设人才" },
+            { name:"香港理工大学", emoji:"🇭🇰🏗️", loc:"中国香港", slogan:"开物成务励学利民", info:"QS78｜工程/设计", famous:"建筑/工程大师" },
+            { name:"香港浸会大学", emoji:"🇭🇰📚", loc:"中国香港", slogan:"笃信力行", info:"QS79｜传媒/中医", famous:"传媒界人才" },
+            { name:"岭南大学", emoji:"🇭🇰🏯", loc:"中国香港", slogan:"作育英才服务社会", info:"QS80｜人文/商学", famous:"香港学者" },
+            { name:"香港教育大学", emoji:"🇭🇰📚", loc:"中国香港", slogan:"教育为本", info:"QS81｜教育/人文", famous:"香港教育界人才" },
+            { name:"香港都会大学", emoji:"🇭🇰🏫", loc:"中国香港", slogan:"励志求进", info:"QS82｜商学/工程", famous:"香港政商界人才" },
+            { name:"香港树仁大学", emoji:"🇭🇰📚", loc:"中国香港", slogan:"敦仁博物", info:"QS83｜人文/商学", famous:"香港社会服务人才" },
+            { name:"西澳大学", emoji:"🇦🇺🌊", loc:"澳大利亚", slogan:"西部明珠", info:"QS84｜海洋科学/工程", famous:"澳州政商精英" },
+            { name:"阿德莱德大学", emoji:"🇦🇺🍷", loc:"澳大利亚", slogan:"红土地学府", info:"QS85｜医学/农学", famous:"诺贝尔奖得主" },
+            { name:"昆士兰大学", emoji:"🇦🇺🌴", loc:"澳大利亚", slogan:"阳光之州学府", info:"QS86｜农学/医学", famous:"澳州政商精英" },
+            { name:"新南威尔士大学", emoji:"🇦🇺🏙️", loc:"澳大利亚", slogan:"悉尼科技学府", info:"QS87｜工程/商学", famous:"澳州政商精英" },
+            { name:"莫纳什大学", emoji:"🇦🇺🌿", loc:"澳大利亚", slogan:"多元文化学府", info:"QS88｜医学/工程", famous:"澳州政商精英" },
+            { name:"墨尔本大学", emoji:"🇦🇺🏛️", loc:"澳大利亚", slogan:"花园城市学府", info:"QS89｜医学/法学", famous:"澳州政商精英" },
+            { name:"悉尼大学", emoji:"🇦🇺🌉", loc:"澳大利亚", slogan:"南半球牛津", info:"QS90｜法学/医学", famous:"澳州政商精英" },
+            { name:"奥克兰大学", emoji:"🇳🇿🌊", loc:"新西兰", slogan:"新西兰第一", info:"QS91｜工程/医学", famous:"新西兰政商精英" },
+            { name:"怀卡托大学", emoji:"🇳🇿🌿", loc:"新西兰", slogan:"毛利文化学府", info:"QS92｜管理/教育", famous:"新西兰政商精英" },
+            { name:"坎特伯雷大学", emoji:"🇳🇿🏔️", loc:"新西兰", slogan:"南岛学府", info:"QS93｜工程/教育", famous:"新西兰科技人才" },
+            { name:"梅西大学", emoji:"🇳🇿🌾", loc:"新西兰", slogan:"农业学府", info:"QS94｜农学/兽医", famous:"新西兰农业专家" },
+            { name:"林肯大学", emoji:"🇳🇿🌿", loc:"新西兰", slogan:"农业研究学府", info:"QS95｜农学/环境科学", famous:"新西兰环境专家" },
+            { name:"都柏林圣三一学院", emoji:"🇮🇪🏰", loc:"爱尔兰", slogan:"爱尔兰牛津", info:"QS96｜人文/医学", famous:"乔纳森·斯威夫特" },
+            { name:"都柏林大学", emoji:"🇮🇪🏙️", loc:"爱尔兰", slogan:"爱尔兰国立学府", info:"QS97｜商学/工程", famous:"爱尔兰政商精英" },
+            { name:"科克大学", emoji:"🇮🇪🌊", loc:"爱尔兰", slogan:"南部学府", info:"QS98｜人文/科学", famous:"爱尔兰学者" },
+            { name:"高威大学", emoji:"🇮🇪🌿", loc:"爱尔兰", slogan:"西部学府", info:"QS99｜人文/科学", famous:"爱尔兰学者" },
+            { name:"利默里克大学", emoji:"🇮🇪🏙️", loc:"爱尔兰", slogan:"科技学府", info:"QS100｜工程/管理", famous:"爱尔兰科技人才" },
+            { name:"布拉格查理大学", emoji:"🇨🇿🏰", loc:"捷克", slogan:"中欧第一学府", info:"QS101｜人文/医学", famous:"捷克学者、作家" },
+            { name:"捷克技术大学", emoji:"🇨🇿🔬", loc:"捷克", slogan:"布拉格科技学府", info:"QS102｜工程/技术", famous:"捷克工程人才" },
+            { name:"布拉格化工大学", emoji:"🇨🇿🧪", loc:"捷克", slogan:"化工研究学府", info:"QS103｜化学/材料", famous:"捷克化工专家" },
+            { name:"布尔诺科技大学", emoji:"🇨🇿🏙️", loc:"捷克", slogan:"摩拉维亚科技学府", info:"QS104｜工程/技术", famous:"捷克科技人才" },
+            { name:"奥洛穆茨帕拉茨基大学", emoji:"🇨🇿🏯", loc:"捷克", slogan:"摩拉维亚古典学府", info:"QS105｜人文/科学", famous:"捷克学者" },
+            { name:"布达佩斯罗兰大学", emoji:"🇭🇺🏰", loc:"匈牙利", slogan:"匈牙利第一学府", info:"QS106｜人文/科学", famous:"匈牙利学者、科学家" },
+            { name:"布达佩斯技术与经济大学", emoji:"🇭🇺🏙️", loc:"匈牙利", slogan:"科技与经济学府", info:"QS107｜工程/经济", famous:"匈牙利科技人才" },
+            { name:"德布勒森大学", emoji:"🇭🇺🌿", loc:"匈牙利", slogan:"东部学府", info:"QS108｜医学/农学", famous:"匈牙利学者" }
+        ];
+
+        let unlockedUniversities = [];
+        const unlockedGrid = document.getElementById("unlockedGrid");
+        const collectionProgress = document.getElementById("collectionProgress");
+
+        function unlockRandom() {
+            if (unlockedUniversities.length >= allUniversities.length) return;
+            let idx;
+            do {
+                idx = Math.floor(Math.random() * allUniversities.length);
+            } while (unlockedUniversities.includes(idx));
+            unlockedUniversities.push(idx);
+            showUnlockToast(allUniversities[idx]);
+            updateUniversityGrid();
+        }
+
+        function updateUniversityGrid() {
+            collectionProgress.textContent = `已解锁 ${unlockedUniversities.length} / 108`;
+            unlockedGrid.innerHTML = "";
+            unlockedUniversities.forEach(idx => {
+                const uni = allUniversities[idx];
+                const card = document.createElement("div");
+                card.className = "university-card";
+                card.innerHTML = `
+                    <div class="uni-emoji">${uni.emoji}</div>
+                    <div class="uni-name">${uni.name}</div>
+                    <div class="unlock-badge">${uni.info}</div>
+                `;
+                unlockedGrid.appendChild(card);
+            });
+        }
+
+        function showUnlockToast(uni) {
+            const existing = document.querySelector('.unlock-toast');
+            if (existing) existing.remove();
+            const toast = document.createElement('div');
+            toast.className = 'unlock-toast';
+            toast.innerHTML = `
+                <div style="font-size:1.5rem;margin-bottom:10px;">${uni.emoji}</div>
+                <div>恭喜解锁名校</div>
+                <div style="font-size:1.2rem;margin:6px 0;font-weight:bold;">${uni.name}｜${uni.loc}</div>
+                <span class="blessing-text">🙏名校福缘护体</span>
+                <button class="receive-btn">🙏收下福气</button>
+            `;
+            toast.querySelector('.receive-btn').addEventListener('click', () => toast.remove());
+            document.body.appendChild(toast);
+        }
+
+        // 分享按钮（彻底修复+朋友圈文案）
+        const shareBtn = document.getElementById("shareBtn");
+
+        function generateShareText() {
+            const randomUni = allUniversities[Math.floor(Math.random() * allUniversities.length)].name;
+            const knockNum = totalKnock > 0 ? totalKnock : Math.floor(Math.random() * 108 + 1);
+            const templates = [
+                "敲木鱼祈福减压，我今天敲了{knock}下，解锁了{uni}名校福卡✨！快来一起祈福，愿金榜题名、逢考必过～",
+                "🎓 考生静心祈福｜我敲了{knock}下，解锁{uni}名校福卡，愿所有考生下笔有神、前程似锦～",
+                "🙏 高考祈福｜敲{knock}下木鱼，解锁{uni}名校福卡，祝学子旗开得胜、金榜题名！"
+            ];
+            const t = templates[Math.floor(Math.random() * templates.length)];
+            return t.replace("{knock}", knockNum).replace("{uni}", randomUni);
+        }
+
+        function copyToClipboard(text) {
+            if (navigator.clipboard && window.isSecureContext) {
+                return navigator.clipboard.writeText(text).then(() => true).catch(() => false);
+            } else {
+                const t = document.createElement('textarea');
+                t.value = text;
+                t.style.position = 'fixed';
+                t.style.left = '-9999px';
+                t.style.top = '-9999px';
+                document.body.appendChild(t);
+                t.focus();
+                t.select();
+                let ok = false;
+                try { ok = document.execCommand('copy'); } catch (e) {}
+                document.body.removeChild(t);
+                return ok;
+            }
+        }
+
+        shareBtn.addEventListener('click', async () => {
+            const text = generateShareText();
+            const url = window.location.href;
+            const full = text + "\n\n" + url;
+
+            const ok = await copyToClipboard(full);
+            if (ok) {
+                alert("✅ 分享文案已复制！\n\n" + full);
+            } else {
+                alert("📋 请手动复制：\n\n" + full);
+            }
+
+            if (navigator.share) {
+                try {
+                    await navigator.share({ title: "考生祈福木鱼", text: text, url: url });
+                } catch (e) {}
+            }
+        });
+
+        // 赞赏码
+        const payBtn = document.getElementById("payBtn");
+        const qrContainer = document.getElementById("qrContainer");
+        payBtn.addEventListener('click', () => {
+            qrContainer.style.display = qrContainer.style.display === "flex" ? "none" : "flex";
+        });
+
+        document.getElementById("copyWechatBtn").addEventListener('click', () => {
+            navigator.clipboard.writeText('yiminvisa').then(() => alert("已复制微信"));
+        });
+
+        initAudio();
+        updateUniversityGrid();
+    </script>
+</body>
+</html>
